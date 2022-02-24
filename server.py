@@ -1,10 +1,36 @@
-from ast import Pass
-from crypt import methods
+
 from flask import Flask, redirect, render_template, request, url_for
+from flask_sqlalchemy import SQLAlchemy
+import os
+
 
 app = Flask(__name__)
 
+
+#finding the current app path. (location of this file)
+project_dir = os.path.dirname(os.path.abspath(__file__))
+
+#creating the database file (list.db) to the sqlalchemy dependency
+database_file = "sqlite:///{}".format(os.path.join(project_dir, "list.db"))
+
+app.config["SQLALCHEMY_DATABASE_URI"] = database_file
+app.config["SQLALCHEMY_TRACK_NOTIFICATIONS"] = False
+
+db = SQLAlchemy(app)
+
+
+class Todo(db.Model):
+    todo= db.Column(db.String(100), unique=False, nullable=False, primary_key=True)
+
+    def __repr__(Self):
+        return f"Todo: {self.todo}"
+        #return "Todo: {}". format(self.todo)
+    
+
+
+"""
 todoData = []
+
 
 @app.route('/')
 def index():
@@ -38,6 +64,7 @@ def update_item():
 
         return redirect(url_for('index'))
 
+"""
 
 if __name__=='__main__':
     app.run(debug=True)
